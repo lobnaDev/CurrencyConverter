@@ -1,14 +1,14 @@
 package com.app.currencyconverter
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
-import android.widget.Toast
-import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import com.google.android.material.textfield.TextInputEditText
+
 
 class MainActivity : AppCompatActivity() {
     val Tag = "MainActivity"
@@ -36,29 +36,18 @@ class MainActivity : AppCompatActivity() {
         initializeViews()
         populateDropDownList()
 
-        convertButton.setOnClickListener {
-            if(amountEditText.text.toString().isNotEmpty()) {
-                val amount = amountEditText.getText().toString().toDouble()
-                val toCurrencyValue = values[toDropDownMenu.getText().toString()]
-                val fromCurrencyValue = values[fromDropDownMenu.text.toString()]
-                val result = amount.times(toCurrencyValue!!.div(fromCurrencyValue!!))
-                resultEditText.setText(result.toString())
-
-
-
-
-                Log.d(Tag, "amount is equal : " + amount)
-                Log.d(Tag, "selected Currency is  : " + toCurrencyValue)
-                Log.d(Tag, "result is equal : " + result)
-            }else{
-                amountEditText.setError("Amount Filled required")
-//          val snackbar= Snackbar.make(fromDropDownMenu,"Amount Filled required",Snackbar.LENGTH_SHORT)
-//                snackbar.show()
-//                snackbar.setAction("ok"){
-//
-//                }
-            }
+        amountEditText.addTextChangedListener{
+            calculateResult()
         }
+        fromDropDownMenu.setOnItemClickListener { adapterView, view, i, l ->
+            calculateResult()
+        }
+        toDropDownMenu.setOnItemClickListener { adapterView, view, i, l ->
+            calculateResult()
+        }
+
+
+
     }
     private fun initializeViews(){
         convertButton = findViewById(R.id.Convertbutton)
@@ -71,8 +60,21 @@ class MainActivity : AppCompatActivity() {
     private fun populateDropDownList(){
         val listOfCountry = listOf(saudiRiyal,americanDollar,AED,Euro)
         val adapter = ArrayAdapter(this,R.layout.drop_down_list_item,listOfCountry)
-        fromDropDownMenu.setAdapter(adater)
+        fromDropDownMenu.setAdapter(adapter)
         toDropDownMenu.setAdapter(adapter)
+    }
+    private fun calculateResult(){
+        if(amountEditText.text.toString().isNotEmpty()) {
+            val amount = amountEditText.getText().toString().toDouble()
+            val toCurrencyValue = values[toDropDownMenu.getText().toString()]
+            val fromCurrencyValue = values[fromDropDownMenu.text.toString()]
+            val result = amount.times(toCurrencyValue!!.div(fromCurrencyValue!!))
+            val formatedResult = String.format("%.2f",result)
+            resultEditText.setText(formatedResult)
+
+        }else{
+            amountEditText.setError("Amount Filled required")
+        }
     }
 
 }
