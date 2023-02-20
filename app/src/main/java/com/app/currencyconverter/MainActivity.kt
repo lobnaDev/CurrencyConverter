@@ -1,10 +1,14 @@
 package com.app.currencyconverter
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
+import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.textfield.TextInputEditText
@@ -21,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var resultEditText: TextInputEditText
     lateinit var fromDropDownMenu : AutoCompleteTextView
     lateinit var  toDropDownMenu :AutoCompleteTextView
+    lateinit var toolbar :Toolbar
 
     val values = mapOf(
         americanDollar to 1.0 ,
@@ -36,6 +41,15 @@ class MainActivity : AppCompatActivity() {
         initializeViews()
         populateDropDownList()
 
+        toolbar.inflateMenu(R.menu.options_menu)
+        toolbar.setOnMenuItemClickListener{ menuItem ->
+            if (menuItem.itemId == R.id.share_action){
+
+            }else if (menuItem.itemId == R.id.share_action){
+
+            }
+            true
+        }
         amountEditText.addTextChangedListener{
             calculateResult()
         }
@@ -55,6 +69,7 @@ class MainActivity : AppCompatActivity() {
         resultEditText = findViewById(R.id.result_editText)
         fromDropDownMenu = findViewById(R.id.from_autoComplete)
         toDropDownMenu = findViewById(R.id.to_autoComplete)
+        toolbar = findViewById(R.id.toolbar)
     }
 
     private fun populateDropDownList(){
@@ -77,4 +92,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val menuInflater :MenuInflater = getMenuInflater()
+        menuInflater.inflate(R.menu.options_menu,menu)
+        return true
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.share_action){
+
+        }else if (item.itemId == R.id.setting_action){
+
+        }
+        return super.onOptionsItemSelected(item)
+
+
+    }
 }
